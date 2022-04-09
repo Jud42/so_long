@@ -6,70 +6,84 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:29:16 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/01 14:08:29 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/09 19:46:24 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	parse_move(t_data	*data, char pos, int move)
+/*dans cette fonction je vais analyser la direction 
+ et push image qui correspond a ce dernier*/
+void	parse_move(t_data *data, char pos, int move)
 {
-	(void) pos;
-	(void) move;
-	/*dans cette fonction je vais analyser la direction et push image qui correspond a ce dernier*/
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->sprite, (data->p_x * IMG_X), (data->p_y * IMG_Y + 32)); /* + 32 display move*/
-
+	init_img(data);
+	if (pos == 'y' && move == -1)
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->s_up, \
+				(data->p_x * IMG_X), (data->p_y * IMG_Y));
+	else if (pos == 'y' && move == 1)
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->s_down, \
+				(data->p_x * IMG_X), (data->p_y * IMG_Y));
+	else if (pos == 'x' && move == -1)
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->s_left, \
+				(data->p_x * IMG_X), (data->p_y * IMG_Y));
+	else if (pos == 'x' && move == 1)
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->s_right, \
+				(data->p_x * IMG_X), (data->p_y * IMG_Y));
+	else
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->sprite, \
+				(data->p_x * IMG_X), (data->p_y * IMG_Y));
 }
 
 void	ft_collect(t_data	*data)
 {
-		square_background(data, BACKGR_PIXEL);
-		data->map->map[data->p_y][data->p_x] = '0';
-		--data->total_c;
-		if(data->total_c == 0)
-		{
-			//I need to insert a new image for exit here (ex : open door)
-			printf("you can leave rightnow\n");
-		}
-}
-void	ft_move(t_data	*data, char pos, int move)
-{
-  	if((pos == 'y' && data->map->map[data->p_y + move][data->p_x] != '1') ||
-			 (pos == 'x' && data->map->map[data->p_y][data->p_x + move] != '1'))
-				square_background(data, BACKGR_PIXEL);
-	if((pos == 'y' && data->map->map[data->p_y + move][data->p_x] != '1' ) &&
-			(pos == 'y' && data->map->map[data->p_y + move][data->p_x] != 'E'))
-				data->p_y += move;
-	else if((pos == 'x' && data->map->map[data->p_y][data->p_x + move] != '1') &&
-			(pos == 'x' && data->map->map[data->p_y][data->p_x + move] != 'E'))
-				data->p_x += move;
-	else if((pos == 'y' && data->map->map[data->p_y + move][data->p_x] == 'E' && 
-		data->total_c == 0) || (pos == 'x' && data->map->map[data->p_y][data->p_x + move] == 'E' 
-				&& data->total_c == 0)){
-				if(pos == 'y')
-					data->p_y += move;
-				else
-					data->p_x += move;
+	square_background(data->p_x, data->p_y, data);
+	data->map->map[data->p_y][data->p_x] = '0';
+	--data->total_c;
+	if (data->total_c == 0)
+	{
+		square_background(data->e_x, data->e_y, data);
+		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->exit, \
+			(data->e_x * IMG_X), (data->e_y * IMG_Y));
 	}
-	if(data->map->map[data->p_y][data->p_x] == 'C')
-		ft_collect(data);
-	parse_move(data, pos, move);
-	mlx_do_sync(data->mlx);
 }
 
-int	key_hook_event(int	keycode, t_data	*data)
+void	move_y(t_data	*data, char pos, int move)
 {
-	if(keycode == 53)
-		exit_key(data);
-	if(keycode == UP)
-		ft_move(data, 'y', -1);
-	else if(keycode == DOWN)
-		ft_move(data, 'y', 1);
-	else if(keycode == LEFT)
-		ft_move(data, 'x', -1);
-	else if(keycode == RIGHT)
-		ft_move(data, 'x', 1);
-	if(data->map->map[data->p_y][data->p_x] == 'E')
-		printf("finish game\n");
-	return (0);
+	if (((pos == 'y' && data->map->map[data->p_y + move][data->p_x] != '1') \
+		&& (pos == 'y' && data->map->map[data->p_y + move][data->p_x] != 'E')) \
+		|| (pos == 'y' && data->map->map[data->p_y + move][data->p_x] == 'E' \
+			&& data->total_c == 0))
+	{					
+		data->p_y += move;
+		ft_printf("%d\n", ++data->counter);
+	}	
+}
+
+void	move_x(t_data	*data, char pos, int move)
+{
+	if (((pos == 'x' && data->map->map[data->p_y][data->p_x + move] != '1') \
+		&& (pos == 'x' && data->map->map[data->p_y][data->p_x + move] != 'E')) \
+		|| (pos == 'x' && data->map->map[data->p_y][data->p_x + move] == 'E' \
+			&& data->total_c == 0))
+	{
+		data->p_x += move;
+		ft_printf("%d\n", ++data->counter);
+	}
+}
+
+void	ft_move(t_data	*data, char pos, int move)
+{
+	if ((pos == 'y' && data->map->map[data->p_y + move][data->p_x] != '1') \
+		|| (pos == 'x' && data->map->map[data->p_y][data->p_x + move] != '1'))
+	{
+		square_background(data->p_x, data->p_y, data);
+		if (pos == 'y')
+			move_y(data, pos, move);
+		else
+			move_x(data, pos, move);
+		if (data->map->map[data->p_y][data->p_x] == 'C')
+			ft_collect(data);
+		parse_move(data, pos, move);
+	}
+	mlx_do_sync(data->mlx);
 }

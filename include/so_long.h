@@ -6,7 +6,7 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 11:55:20 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/09 19:53:21 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:34:54 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,14 @@
 # include "mlx.h"
 # include "libft.h"
 # include <fcntl.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <errno.h>
+# define ESC 53 //Escape
 # define UP 13	 //W
 # define DOWN 1	 //S	
 # define LEFT 0	 //A
 # define RIGHT 2 //D
-# define ESC 53
 # define IMG_X 64
 # define IMG_Y 64
 # define BACKGROUND "./gametiles/background.xpm"
@@ -42,11 +41,12 @@ typedef struct s_map{
 typedef struct s_img{ //struct for data image
 	void	*mlx_img;
 	void	*addr;
+	int		endian;
 	int		bpp;
 	int		line_lenght;
-	int		endian;
 	void	*background;	
 	void	*object;
+	void	*texture;
 	void	*exit;
 	void	*sprite;
 	void	*s_up;
@@ -54,6 +54,17 @@ typedef struct s_img{ //struct for data image
 	void	*s_left;
 	void	*s_right;
 }	t_img;
+
+typedef struct s_enem{
+	int		r_x;
+	int		r_y;
+	int		count;
+	void	*img_0;
+	void	*img_1;
+	void	*img_2;
+	void	*img_3;
+	void	*img_4;
+}	t_enem;
 
 typedef struct s_data{ //struct for init 
 	void	*mlx;
@@ -66,12 +77,14 @@ typedef struct s_data{ //struct for init
 	int		e_y;
 	int		counter;
 	int		total_c;
+	int		patrol;
 	t_img	*img;
 	t_map	*map;
+	t_enem	*enem;
 }	t_data;
 
+int		ft_parse_arg(int ac, char **av);
 void	parse_map(t_data *data);
-int		exit_key(int keycode, t_data *data);
 int		mouse_exit(t_data	*data);
 void	put_background(t_data *data);
 int		square_background(int data_x, int data_y, t_data *data);
@@ -83,13 +96,14 @@ void	read_map(t_data	*data, t_map	*map);
 int		define_img(char element);
 void	put_element(t_data	*data, char	*path);
 void	put_player(t_data	*data, char	*path);
+void	anim_enem(t_data *data);
 void	init_data_mlx(t_data	*data);
 void	init_img(t_data *data);
-void	error_msg(void *data, char *s);
+void	error_msg(void *ptr_mlx, char *s, t_data *data);
 void	ft_end_game(t_data *data);
-int		ft_parse_arg(int ac, char **av);
 void	free_map(t_data *data);
 void	ft_end_game(t_data	*data);
 void	ft_move(t_data *data, char pos, int move);
-
+void	put_move(t_data *data);
+void	ft_game_over(t_data *data);
 #endif 

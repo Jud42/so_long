@@ -6,17 +6,16 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:29:16 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/09 19:46:24 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 16:27:28 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
 /*dans cette fonction je vais analyser la direction 
  et push image qui correspond a ce dernier*/
+
 void	parse_move(t_data *data, char pos, int move)
 {
-	init_img(data);
 	if (pos == 'y' && move == -1)
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->s_up, \
 				(data->p_x * IMG_X), (data->p_y * IMG_Y));
@@ -53,10 +52,7 @@ void	move_y(t_data	*data, char pos, int move)
 		&& (pos == 'y' && data->map->map[data->p_y + move][data->p_x] != 'E')) \
 		|| (pos == 'y' && data->map->map[data->p_y + move][data->p_x] == 'E' \
 			&& data->total_c == 0))
-	{					
 		data->p_y += move;
-		ft_printf("%d\n", ++data->counter);
-	}	
 }
 
 void	move_x(t_data	*data, char pos, int move)
@@ -65,10 +61,7 @@ void	move_x(t_data	*data, char pos, int move)
 		&& (pos == 'x' && data->map->map[data->p_y][data->p_x + move] != 'E')) \
 		|| (pos == 'x' && data->map->map[data->p_y][data->p_x + move] == 'E' \
 			&& data->total_c == 0))
-	{
 		data->p_x += move;
-		ft_printf("%d\n", ++data->counter);
-	}
 }
 
 void	ft_move(t_data	*data, char pos, int move)
@@ -84,6 +77,10 @@ void	ft_move(t_data	*data, char pos, int move)
 		if (data->map->map[data->p_y][data->p_x] == 'C')
 			ft_collect(data);
 		parse_move(data, pos, move);
+		if (data->enem->r_x)
+			anim_enem(data);
+		ft_printf("%d\n", ++data->counter);
+		put_move(data);
 	}
 	mlx_do_sync(data->mlx);
 }

@@ -6,14 +6,14 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 13:24:39 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/09 18:25:00 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:28:56 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
 // count line in map(fd)
-void	count_map(int fd, t_map	*map)
+static void	count_map(int fd, t_map	*map)
 {
 	char	c;
 	int		max;
@@ -65,13 +65,15 @@ void	create_map(char	*file, t_data *data)
 	fd = open(file, O_RDONLY);
 	if (!fd)
 		return ;
-	data->map->map = calloc(data->map->y + 1, sizeof(char *));
+	data->map->map = (char **)malloc(sizeof(char *) * (data->map->y + 1));
 	if (!data->map->map)
 	{
-		perror("\nmalloc() Tab[][] failed\n");
+		ft_printf("Error\nMalloc() Map failed\n");
+		data->map->map = NULL;
 		exit(EXIT_FAILURE);
 	}
 	while (i < data->map->y)
 		data->map->map[i++] = get_next_line(fd);
+	data->map->map[i] = NULL;
 	parse_map(data);
 }

@@ -6,22 +6,11 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:10:25 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/09 19:51:56 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 15:43:49 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "so_long.h"
 
-//put pixel on img
-void	my_mlx_put_pixel(t_img	*img, int x, int y, int color)
-{
-	char	*pixel;
-
-	pixel = img->addr + (y * img->line_lenght + x * (img->bpp / 8));
-	*(unsigned int *)pixel = color;
-}
-/*-----------------------------------------------------*/
-
-//create pix background & put it on img endlessly 
 void	put_background(t_data *data)
 {
 	int	i;
@@ -79,4 +68,22 @@ void	put_player(t_data *data, char *path)
 	data->img->sprite = mlx_xpm_file_to_image(data->mlx, path, &width, &height);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->sprite, \
 			(data->p_x * IMG_X), (data->p_y * IMG_Y));
+}
+
+void	put_move(t_data *data)
+{
+	char	*str;
+
+	str = ft_itoa(data->counter);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, \
+		data->img->texture, IMG_X / 1.8, IMG_Y / 4.5);
+	mlx_string_put(data->mlx, data->mlx_win, \
+			IMG_X, IMG_Y / 1.8, -1, "MOVE :");
+	if (data->total_c >= 0)
+		mlx_string_put(data->mlx, data->mlx_win,
+			IMG_X * 2, IMG_Y / 1.8, -1, str);
+	else
+		mlx_string_put(data->mlx, data->mlx_win,
+			IMG_X * 2, IMG_Y / 2, 0x00ff0000, str);
+	free(str);
 }

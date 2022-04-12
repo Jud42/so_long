@@ -1,9 +1,9 @@
 
-NAME		= prog
+NAME		= so_long
 LIB_PRINTF_DIR		= ./libft/ft_printf
 MLX_DIR		= ./minilibx
 MLX			= libmlx.a
-SRCS	= utils_map.c	so_long.c	display.c	close_win.c	read_map.c	move.c	init.c	end_game.c	parse_map.c	render_event.c
+SRCS	= utils_map.c	so_long.c	display.c	close_win.c	read_map.c	move.c	init.c	end_game.c	parse_map.c	render_event.c	enemies.c
 DIR_S	= src
 DIR_O	= temp
 RM 	= rm -rf

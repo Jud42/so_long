@@ -6,7 +6,7 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 20:58:42 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/09 18:23:30 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:34:05 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,34 @@ int	ft_parse_arg(int ac, char **av)
 	return (0);
 }
 
-void	invalid_map(t_data *data, char *s)
+static void	invalid_map(t_data *data, char *s)
 {
 	free_map(data);
 	ft_printf("Error\n%s", s);
 	exit(EXIT_FAILURE);
 }
 
-void	parse_char(char c, t_data *data)
+static void	parse_char(char c, t_data *data)
 {
 	static int	p = 0;
 	static int	e = 0;
 
 	if (c != '1' && c != '0' && c != 'E' && c != 'P' \
-			&& c != 'C' && c != '\n')
+		&& c != 'C' && c != 'R' && c != '\n')
 		invalid_map(data, "There is an invalid character in your Map\n");
 	else if (c == 'P')
 		p++;
 	else if (c == 'E')
 		e++;
+	else if (c == 'R')
+		data->patrol++;
 	else if (c == 'C')
 		data->total_c++;
-	if (p > 1 || e > 1)
-		invalid_map(data, "You just need to have one player and one exit\n");
+	if (p > 1 || e > 1 || data->patrol > 1)
+		invalid_map(data, "You just need to have one 'P', 'E', 'R'\n");
 }
 
-int	parse_wall(t_data *data, int i, int j)
+static int	parse_wall(t_data *data, int i, int j)
 {
 	int	res;
 
@@ -86,6 +88,7 @@ void	parse_map(t_data *data)
 	int	j;
 	int	res;
 
+	data->patrol = 0;
 	data->total_c = 0;
 	i = -1;
 	j = -1;

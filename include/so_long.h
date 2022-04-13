@@ -6,7 +6,7 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 11:55:20 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/12 17:34:54 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/13 17:58:54 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ typedef struct s_data{ //struct for init
 	int		counter;
 	int		total_c;
 	int		patrol;
+	int		play_i;
+	int		exit_i;
 	t_img	*img;
 	t_map	*map;
 	t_enem	*enem;

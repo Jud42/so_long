@@ -6,7 +6,7 @@
 /*   By: rmamison <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:10:25 by rmamison          #+#    #+#             */
-/*   Updated: 2022/04/12 15:43:49 by rmamison         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:14:54 by rmamison         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "so_long.h"
@@ -84,6 +84,6 @@ void	put_move(t_data *data)
 			IMG_X * 2, IMG_Y / 1.8, -1, str);
 	else
 		mlx_string_put(data->mlx, data->mlx_win,
-			IMG_X * 2, IMG_Y / 2, 0x00ff0000, str);
+			IMG_X * 2, IMG_Y / 1.8, 0x00ff0000, str);
 	free(str);
 }
